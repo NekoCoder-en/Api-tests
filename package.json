@@ -1,0 +1,29 @@
+{
+  "name": "supabase-maui-backend-api",
+  "version": "1.0.0",
+  "description": "API REST en Node.js con Express y Supabase optimizada para Vercel Serverless y aplicaciones .NET MAUI",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "supabase",
+    "vercel",
+    "maui",
+    "rest-api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
