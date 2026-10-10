@@ -13,6 +13,18 @@ const express = require('express');
 const router = express.Router();
 const { supabase } = require('../config/supabase');
 
+// Middleware a nivel de router para validar que el cliente de Supabase esté disponible
+router.use((req, res, next) => {
+  if (!supabase) {
+    return res.status(500).json({
+      success: false,
+      error: 'Error de configuración en el servidor: Las variables de entorno SUPABASE_URL o SUPABASE_ANON_KEY no están configuradas en Vercel.',
+      hint: 'Por favor, configura SUPABASE_URL y SUPABASE_ANON_KEY en las Environment Variables de tu proyecto en el panel de Vercel.',
+    });
+  }
+  next();
+});
+
 /**
  * Función auxiliar para validar formato básico de correo electrónico.
  */

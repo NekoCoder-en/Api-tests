@@ -41,16 +41,31 @@ app.use(express.urlencoded({ extended: true }));
 
 /**
  * ----------------------------------------------------------------------------
- * 2. ENDPOINT DE ESTADO / HEALTH CHECK
+ * 2. ENDPOINTS DE ESTADO / HEALTH CHECK
  * ----------------------------------------------------------------------------
- * Útil para monitoreo y para verificar que la API está viva sin requerir autenticación.
+ * Permite verificar desde el navegador o herramientas de monitoreo que la API responde.
  */
+const getStatusResponse = () => ({
+  success: true,
+  message: '🚀 API REST en Node.js para .NET MAUI funcionando correctamente.',
+  timestamp: new Date().toISOString(),
+  environment: process.env.NODE_ENV || 'production',
+  supabaseConfigured: Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY),
+  endpoints: {
+    healthCheck: 'GET /api',
+    register: 'POST /api/auth/register',
+    login: 'POST /api/auth/login',
+    refreshToken: 'POST /api/auth/refresh',
+    userProfile: 'GET /api/user/profile (Requiere Authorization: Bearer <token>)',
+  },
+});
+
+app.get('/', (req, res) => {
+  res.status(200).json(getStatusResponse());
+});
+
 app.get('/api', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: '🚀 API REST conectada a Supabase funcionando correctamente.',
-    timestamp: new Date().toISOString(),
-  });
+  res.status(200).json(getStatusResponse());
 });
 
 /**

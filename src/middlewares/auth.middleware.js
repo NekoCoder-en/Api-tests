@@ -15,6 +15,14 @@ const { supabase } = require('../config/supabase');
 
 const authenticateToken = async (req, res, next) => {
   try {
+    // 0. Verificar que Supabase esté configurado
+    if (!supabase) {
+      return res.status(500).json({
+        success: false,
+        error: 'Error de configuración: Faltan las variables de entorno SUPABASE_URL o SUPABASE_ANON_KEY.',
+      });
+    }
+
     // 1. Obtener el encabezado 'Authorization' de la petición HTTP
     const authHeader = req.headers['authorization'];
 

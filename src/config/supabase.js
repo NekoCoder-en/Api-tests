@@ -37,33 +37,29 @@ if (!supabaseUrl || !supabaseAnonKey) {
  * Si persistiéramos la sesión, la sesión de un usuario podría quedar guardada en memoria
  * y filtrarse accidentalmente a la petición de otro usuario. Cada petición debe ser 100% sin estado (stateless).
  */
-const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: false,     // No almacenar tokens en almacenamiento local o cookies del proceso
-    autoRefreshToken: false,   // El backend no debe renovar tokens en segundo plano automáticamente
-    detectSessionInUrl: false, // Desactivar detección de hash en URL (propia de navegadores SPA)
-  },
-});
+let supabase = null;
+let supabaseAdmin = null;
 
-/**
- * ----------------------------------------------------------------------------
- * 2. CLIENTE ADMINISTRADOR (Service Role) - Opcional pero disponible
- * ----------------------------------------------------------------------------
- * Este cliente utiliza la clave `service_role`.
- * ADVERTENCIA DE SEGURIDAD:
- * La clave `service_role` BYPASEA completamente el Row Level Security (RLS).
- * Tiene acceso ilimitado de lectura y escritura a toda la base de datos de Supabase.
- * Úsala ÚNICAMENTE para tareas administrativas internas (ej: triggers del sistema, 
- * auditorías, eliminación forzada de cuentas) y NUNCA expongas esta clave a clientes móviles o web.
- */
-const supabaseAdmin = supabaseServiceRoleKey
-  ? createClient(supabaseUrl, supabaseServiceRoleKey, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
-    })
-  : null;
+if (supabaseUrl && supabaseAnonKey) {
+  supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: false,     // No almacenar tokens en almacenamiento local o cookies del proceso
+      autoRefreshToken: false,   // El backend no debe renovar tokens en segundo plano automáticamente
+      detectSessionInUrl: false, // Desactivar detección de hash en URL (propia de navegadores SPA)
+    },
+  });
+} else {
+  console.warn('⚠️ ADVERTENCIA: SUPABASE_URL o SUPABASE_ANON_KEY no están configuradas.');
+}
+
+if (supabaseUrl && supabaseServiceRoleKey) {
+  supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
+}
 
 module.exports = {
   supabase,
